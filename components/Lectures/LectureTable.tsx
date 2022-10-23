@@ -20,6 +20,11 @@ function useColumns() {
       cell: (info) => info.getValue(),
       enableSorting: false,
     }),
+    columnHelper.accessor("name", {
+      header: "Name",
+      cell: (info) => info.getValue(),
+      enableSorting: false,
+    }),
     columnHelper.accessor("room", {
       header: "Room",
       cell: (info) => info.getValue(),

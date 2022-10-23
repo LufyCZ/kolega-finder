@@ -5,8 +5,9 @@ import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { Database } from "../lib/database.types";
 import Head from "next/head";
-import { Account } from "../components/Auth/Account";
 import { Header } from "../components/Header";
+
+import "./../components/Tooltip/Tooltip.css";
 
 function MyApp({
   Component,
@@ -24,9 +25,10 @@ function MyApp({
       supabaseClient={supabaseClient}
       initialSession={pageProps.initialSession}
     >
-      <div className="min-h-screen bg-gradient-radial">
+      <div className="min-h-screen p-4 min-w-screen bg-gradient-radial">
         <Head>
-          <meta title="FIT Kolega Finder" />
+          <title>Kolega Finder</title>
+          <meta title="Kolega Finder" />
         </Head>
         <div className="space-y-6">
           <Header />

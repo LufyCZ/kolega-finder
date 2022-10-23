@@ -10,6 +10,7 @@
     "gen": "supabase gen types typescript --project-id kbayyyxtkekjjobhzoyk > lib/database.types.ts"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",
     "@supabase/auth-helpers-nextjs": "^0.4.1",
     "@supabase/auth-helpers-react": "^0.3.0",
@@ -18,6 +19,7 @@
     "classnames": "^2.3.2",
     "date-fns": "^2.29.3",
     "next": "12.3.1",
+    "rc-tooltip": "^5.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "supabase": "^1.10.2"

@@ -1,19 +1,7 @@
-import { useEffect, useState } from "react";
-import { UserApi } from "../../pages/api/user";
+import { useUser } from "../../lib/hooks/useUser";
 
 export function CreatorCell({ uid }: { uid: string }) {
-  const [data, setData] = useState<UserApi>();
+  const user = useUser(uid);
 
-  useEffect(() => {
-    fetch(
-      "/api/user?" +
-        new URLSearchParams({
-          uid,
-        })
-    )
-      .then((data) => data.json())
-      .then((data: UserApi) => setData(data));
-  }, [uid]);
-
-  return <div>{data?.full_name}</div>;
+  return <div>{user?.full_name}</div>;
 }

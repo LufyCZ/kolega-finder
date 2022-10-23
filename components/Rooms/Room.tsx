@@ -3,6 +3,9 @@ import classNames from "classnames";
 import { useCallback } from "react";
 import { Database, RowEntry } from "../../lib";
 import { useLectureSeats } from "../../lib/hooks/useLectureSeats";
+import { Tooltip } from "../Tooltip";
+import { Seat } from "./Seat";
+import { UserTooltip } from "./UserTooltip";
 
 interface Room {
   room: string[];
@@ -56,48 +59,74 @@ export function Room({ room, lectureId }: Room) {
   );
 
   return (
-    <div className="flex flex-col justify-center space-y-1.5">
-      {room.map((row, i) => {
-        return (
-          <div key={i} className="flex min-h-[1ch] space-x-1.5 justify-center">
-            {row.split("").map((place, i) => {
-              switch (place) {
-                case "o": {
-                  const seat = totalLength--;
-                  const lectureSeat = lectureSeats?.find(
-                    (lectureSeat) => lectureSeat.seat === seat
-                  );
+    <div className=" min-w-fit">
+      <div className="flex flex-col space-y-1.5">
+        {room.map((row, i) => {
+          return (
+            <div
+              key={i}
+              className="flex min-h-[1ch] space-x-1.5 justify-center"
+            >
+              {row.split("").map((place, i) => {
+                switch (place) {
+                  case "o": {
+                    const seat = totalLength--;
+                    const lectureSeat = lectureSeats?.find(
+                      (lectureSeat) => lectureSeat.seat === seat
+                    );
 
-                  const type: "owned" | "taken" | "free" =
-                    session && lectureSeat?.user_id === session.user.id
-                      ? "owned"
-                      : lectureSeat
-                      ? "taken"
-                      : "free";
+                    const type: "owned" | "taken" | "free" =
+                      session && lectureSeat?.user_id === session.user.id
+                        ? "owned"
+                        : lectureSeat
+                        ? "taken"
+                        : "free";
 
-                  return (
-                    <div
-                      key={i}
-                      className={classNames(
-                        type === "owned" &&
-                          "!border-green-600 border-2 cursor-pointer",
-                        type === "taken" && "border-red border-2",
-                        type === "free" && session && "cursor-pointer",
-                        "flex items-center justify-center w-8 h-8 text-xs bg-slate-600 text-slate-200 rounded-lg select-none hover:bg-slate-500"
-                      )}
-                      onClick={() => handleClick(seat)}
-                    >
-                      {seat}
-                    </div>
-                  );
+                    return (
+                      <>
+                        {type === "taken" ? (
+                          <Tooltip
+                            key={i}
+                            placement="top"
+                            trigger="hover"
+                            mouseEnterDelay={0}
+                            button={
+                              <div>
+                                <Seat
+                                  key={i}
+                                  seat={seat}
+                                  handleClick={handleClick}
+                                  type={type}
+                                  session={!!session}
+                                />
+                              </div>
+                            }
+                            panel={
+                              <UserTooltip user_id={lectureSeat!.user_id} />
+                            }
+                          />
+                        ) : (
+                          <Seat
+                            key={i}
+                            seat={seat}
+                            handleClick={handleClick}
+                            type={type}
+                            session={!!session}
+                          />
+                        )}
+                      </>
+                    );
+                  }
+                  case "-":
+                    return (
+                      <div key={i} className="min-w-[32px] min-h-[32px]" />
+                    );
                 }
-                case "-":
-                  return <div key={i} className="w-8 h-8" />;
-              }
-            })}
-          </div>
-        );
-      })}
+              })}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

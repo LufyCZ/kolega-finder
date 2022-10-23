@@ -32,9 +32,9 @@ function Lecture() {
   if (!lectureId) return <></>;
 
   return (
-    <>
+    <div className="pb-2 overflow-x-auto">
       <Room room={D105} lectureId={lectureId} />
-    </>
+    </div>
   );
 }
 

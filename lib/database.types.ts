@@ -17,6 +17,7 @@ export interface Database {
           updated_at: string | null
           creator: string
           room: string
+          name: string | null
         }
         Insert: {
           id?: number
@@ -25,6 +26,7 @@ export interface Database {
           updated_at?: string | null
           creator: string
           room: string
+          name?: string | null
         }
         Update: {
           id?: number
@@ -33,6 +35,7 @@ export interface Database {
           updated_at?: string | null
           creator?: string
           room?: string
+          name?: string | null
         }
       }
       lectureSeats: {
@@ -60,6 +63,10 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      seat_taken: {
+        Args: { lecture: number; seat: number }
+        Returns: boolean
+      }
       user_per_lecture_count: {
         Args: { lecture: number; user_id: string }
         Returns: number
