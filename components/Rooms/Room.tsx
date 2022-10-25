@@ -1,22 +1,30 @@
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import classNames from "classnames";
-import { useCallback } from "react";
-import { Database, RowEntry } from "../../lib";
+import { useCallback, useMemo } from "react";
+import { Database } from "../../lib";
+import { useLecture } from "../../lib/hooks/useLecture";
 import { useLectureSeats } from "../../lib/hooks/useLectureSeats";
 import { Tooltip } from "../Tooltip";
+import { ROOMS } from "./config";
 import { Seat } from "./Seat";
 import { UserTooltip } from "./UserTooltip";
 
 interface Room {
-  room: string[];
-  lectureId?: number;
+  lectureId: number;
 }
 
-export function Room({ room, lectureId }: Room) {
+export function Room({ lectureId }: Room) {
   const session = useSession();
   const supabase = useSupabaseClient<Database>();
 
   const lectureSeats = useLectureSeats(lectureId);
+  const lecture = useLecture(lectureId);
+  const room = useMemo(
+    () =>
+      lecture && Object.keys(ROOMS).includes(lecture.room)
+        ? ROOMS[lecture.room as keyof typeof ROOMS]
+        : undefined,
+    [lecture]
+  );
 
   const handleClick = useCallback(
     async (seat: number) => {
@@ -30,28 +38,22 @@ export function Room({ room, lectureId }: Room) {
       if (!userSeat) {
         await supabase
           .from("lectureSeats")
-          .insert({ lecture: lectureId, seat, user_id: session.user.id })
-          .then((a) => console.log(a));
+          .insert({ lecture: lectureId, seat, user_id: session.user.id });
       }
       // changed seat
       else if (userSeat.seat !== seat) {
-        await supabase
-          .from("lectureSeats")
-          .update({ ...userSeat, seat })
-          .then((a) => console.log(a));
+        await supabase.from("lectureSeats").update({ ...userSeat, seat });
         // delete seat
       } else {
-        await supabase
-          .from("lectureSeats")
-          .delete()
-          .eq("id", userSeat.id)
-          .then((a) => console.log(a));
+        await supabase.from("lectureSeats").delete().eq("id", userSeat.id);
       }
 
       //updateLectureSeats();
     },
     [lectureId, lectureSeats, session, supabase]
   );
+
+  if (!room) return <></>;
 
   let totalLength = room.reduce(
     (acc, cur) => (acc += cur.match(/o/g)?.length ?? 0),

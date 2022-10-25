@@ -2,12 +2,14 @@ import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 import React, { useCallback, useState } from "react";
+import { Dropdown } from "../../components/Dropdown/Dropdown";
+import { ROOMS } from "../../components/Rooms/config";
 import { Database } from "../../lib";
 
 export function Create() {
   const [name, setName] = useState<string>("");
   const [subject, setSubject] = useState<string>("");
-  const [room, setRoom] = useState<"D105">("D105");
+  const [room, setRoom] = useState<string>("D105");
 
   const session = useSession();
   const supabase = useSupabaseClient<Database>();
@@ -30,7 +32,7 @@ export function Create() {
   }, [session, subject, supabase, name, room, router]);
 
   return (
-    <div className="flex items-center justify-center text-slate-200">
+    <div className="flex items-center justify-center text-sm text-slate-200">
       <div className="p-4 flex flex-col bg-slate-800 rounded-xl min-w-[240px] space-y-4">
         <div className="text-lg font-medium">Create lecture</div>
         <div className="h-0.5 bg-slate-600 -mx-4" />
@@ -39,7 +41,7 @@ export function Create() {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="p-2 outline-none rounded-xl bg-slate-900 placeholder:text-sm"
+            className="p-2 outline-none rounded-xl bg-slate-900 placeholder:font-light placeholder:text-slate-500"
             placeholder="Optional"
           />
         </div>
@@ -48,15 +50,17 @@ export function Create() {
           <input
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            className="p-2 outline-none rounded-xl bg-slate-900 placeholder:text-sm"
+            className="p-2 outline-none rounded-xl bg-slate-900 placeholder:font-light placeholder:text-slate-500"
             placeholder="IEL"
           />
         </div>
         <div className="grid items-center grid-cols-2">
           <div>Room</div>
-          <div className="p-2 cursor-not-allowed bg-slate-900 rounded-xl">
-            D105
-          </div>
+          <Dropdown
+            selectedEntry={room}
+            setEntry={setRoom}
+            entries={Object.keys(ROOMS)}
+          />
         </div>
         <div className="h-0.5 bg-slate-600 -mx-4" />
         <div className="flex justify-end">

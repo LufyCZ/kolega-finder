@@ -1,0 +1,40 @@
+.Dropdown-root {
+  position: relative;
+  
+}
+
+.Dropdown-control {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  box-sizing: border-box;
+  cursor: pointer;
+  outline: none;
+  transition: all 200ms ease;
+}
+
+.Dropdown-menu {
+  margin-top: -1px;
+  max-height: 200px;
+  overflow-y: auto;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  z-index: 1000;
+  -webkit-overflow-scrolling: touch;
+}
+
+.Dropdown-option {
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  padding: 8px 8px;
+}
+
+.Dropdown-noresults {
+  box-sizing: border-box;
+  color: #ccc;
+  cursor: default;
+  display: block;
+  padding: 8px 10px;
+}

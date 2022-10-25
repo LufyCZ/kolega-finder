@@ -7,6 +7,7 @@ import { Database } from "../lib/database.types";
 import Head from "next/head";
 import { Header } from "../components/Header";
 
+import "./../components/Dropdown/Dropdown.css";
 import "./../components/Tooltip/Tooltip.css";
 
 function MyApp({
