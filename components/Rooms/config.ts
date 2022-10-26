@@ -2,7 +2,7 @@
 // "o" seat
 // "k" teacher's desk (to be implemented)
 
-export const D105 = [
+const D105 = [
   "-oooooo--oooooooooooooooo--oooooo-",
   "oooooooo-oooooooooooooooo-oooooooo",
   "oooooooo-oooooooooooooooo-oooooooo",
@@ -17,7 +17,7 @@ export const D105 = [
   "oooooooooooooooo",
 ];
 
-export const D206 = [
+const D0206 = [
   "oooo-oooooooooo-oooo",
   "oooo-oooooooooo-oooo",
   "oooo-oooooooooo-oooo",
@@ -29,7 +29,7 @@ export const D206 = [
   "oooooooooo",
 ];
 
-export const D207 = [
+const D0207 = [
   "oooooooooo",
   "oooooooooo",
   "oooooooooo",
@@ -39,10 +39,78 @@ export const D207 = [
   "oooooooooo",
   "oooooooooo",
   "oooooooooo",
+];
+
+const G202 = [
+  "oooooo-oooo",
+  "oooooo-oooo",
+  "oooooo-oooo",
+  "oooooo-oooo",
+  "oooooo-oooo",
+  "oooooo-oooo",
+  "oooooo-oooo",
+  "oooooo-oooo",
+];
+
+const E105 = [
+  "oooooooooo",
+  "oooooooooo",
+  "oooooooooo",
+  "oooooooooo",
+  "oooooooooo",
+  "oooooooooo",
+  "oooooooooo"
+];
+
+const E104 = [
+  "oooooooooo",
+  "oooooooooo",
+  "oooooooooo",
+  "oooooooooo",
+  "oooooooooo",
+  "oooooooooo",
+  "oooooooooo"
+];
+
+const E112 = [
+  "oooooo-oooooooooooooo-oooooo",
+  "oooooo-oooooooooooooo-oooooo",
+  "oooooo-oooooooooooooo-oooooo",
+  "oooooo-oooooooooooooo-oooooo",
+  "oooooo-oooooooooooooo-oooooo",
+  "oooooo-oooooooooooooo-oooooo",
+];
+
+const A112 = [
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
+];
+
+const A113 = [
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
+  "oooooooo",
 ];
 
 export const ROOMS = {
   D105: D105,
-  D206: D206,
-  D207: D207,
+  D0206: D0206,
+  D0207: D0207,
+  G202: G202,
+  E105: E105,
+  E104: E104,
+  E112: E112,
+  A112: A112,
+  A113: A113,
 };
