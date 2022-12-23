@@ -11,7 +11,7 @@ interface Tabs {
 
 export function Tabs({ tabs }: Tabs) {
   return (
-    <div className="flex flex-col items-center justify-center space-y-4 md:space-y-0 md:space-x-24 md:flex-row">
+    <div className="flex flex-row flex-wrap items-center justify-center gap-x-12 gap-y-4 md:gap-y-0 md:gap-x-24">
       {tabs.map((tab, i) => (
         <Tab key={i} tab={tab} />
       ))}
