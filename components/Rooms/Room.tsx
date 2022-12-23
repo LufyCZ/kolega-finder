@@ -1,11 +1,12 @@
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useCallback, useMemo } from "react";
-import { Database } from "../../lib";
+import { useSession } from "@supabase/auth-helpers-react";
+import classNames from "classnames";
+import { useCallback, useMemo, useState } from "react";
 import { useLecture } from "../../lib/hooks/useLecture";
 import { useLectureSeats } from "../../lib/hooks/useLectureSeats";
-import { Tooltip } from "../Tooltip";
-import { ROOMS } from "./config";
-import { Seat } from "./Seat";
+import { useRoom } from "../../lib/hooks/useRoom";
+import { ConditionalTooltip, Tooltip } from "../Tooltip";
+import { ROOMS, SeatType } from "./config";
+import { Seat, SeatState } from "./Seat";
 import { UserTooltip } from "./UserTooltip";
 
 interface Room {
@@ -13,121 +14,114 @@ interface Room {
 }
 
 export function Room({ lectureId }: Room) {
-  const session = useSession();
-  const supabase = useSupabaseClient<Database>();
+  const [isReversed, setReversed] = useState<boolean>(true);
 
-  const lectureSeats = useLectureSeats(lectureId);
+  const session = useSession();
+
+  const {
+    data: lectureSeats,
+    reserveSeat,
+    changeSeat,
+    deleteSeat,
+  } = useLectureSeats(lectureId);
   const lecture = useLecture(lectureId);
-  const room = useMemo(
-    () =>
-      lecture && Object.keys(ROOMS).includes(lecture.room)
-        ? ROOMS[lecture.room as keyof typeof ROOMS]
-        : undefined,
-    [lecture]
-  );
+  const room = useRoom(lecture?.room, isReversed);
 
   const handleClick = useCallback(
     async (seat: number) => {
       if (!session || !lectureId) return;
 
-      const userSeat = lectureSeats?.find(
+      const currentUserSeat = lectureSeats?.find(
         (lectureSeat) => lectureSeat.user_id === session.user.id
       );
 
-      // no previous seat, new seat
-      if (!userSeat) {
-        await supabase
-          .from("lectureSeats")
-          .insert({ lecture: lectureId, seat, user_id: session.user.id });
-      }
-      // changed seat
-      else if (userSeat.seat !== seat) {
-        await supabase.from("lectureSeats").update({ ...userSeat, seat });
-        // delete seat
+      if (!currentUserSeat) {
+        reserveSeat(seat);
+      } else if (currentUserSeat.seat !== seat) {
+        changeSeat(currentUserSeat.id, seat);
       } else {
-        await supabase.from("lectureSeats").delete().eq("id", userSeat.id);
+        deleteSeat(currentUserSeat.id);
       }
-
-      //updateLectureSeats();
     },
-    [lectureId, lectureSeats, session, supabase]
+    [changeSeat, deleteSeat, lectureId, lectureSeats, reserveSeat, session]
   );
 
   if (!room) return <></>;
 
-  let totalLength = room.reduce(
-    (acc, cur) => (acc += cur.match(/o/g)?.length ?? 0),
-    0
-  );
-
   return (
-    <div className=" min-w-fit">
-      <div className="flex flex-col space-y-1.5">
-        {room.map((row, i) => {
-          return (
-            <div
-              key={i}
-              className="flex min-h-[1ch] space-x-1.5 justify-center"
-            >
-              {row.split("").map((place, i) => {
-                switch (place) {
-                  case "o": {
-                    const seat = totalLength--;
-                    const lectureSeat = lectureSeats?.find(
-                      (lectureSeat) => lectureSeat.seat === seat
-                    );
+    <div className="space-y-4">
+      <div className="flex justify-end md:justify-center">
+        <div
+          className="px-4 py-2 text-sm font-medium cursor-pointer select-none bg-slate-700 text-slate-200 rounded-xl hover:bg-slate-600"
+          onClick={() => setReversed(!isReversed)}
+        >
+          Reverse
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <div className="flex flex-col space-y-1.5 min-w-fit">
+          {room.map((row, i) => {
+            return (
+              <div
+                key={i}
+                className="flex min-h-[1ch] space-x-1.5 justify-center"
+              >
+                {row.map((seat, i) => {
+                  switch (seat.type) {
+                    case SeatType.Seat: {
+                      const lectureSeat = lectureSeats?.find(
+                        (lectureSeat) => lectureSeat.seat === seat.index
+                      );
 
-                    const type: "owned" | "taken" | "free" =
-                      session && lectureSeat?.user_id === session.user.id
-                        ? "owned"
-                        : lectureSeat
-                        ? "taken"
-                        : "free";
+                      const state: SeatState =
+                        session && lectureSeat?.user_id === session.user.id
+                          ? SeatState.Owned
+                          : lectureSeat
+                          ? SeatState.Taken
+                          : SeatState.Free;
 
-                    return (
-                      <>
-                        {type === "taken" ? (
-                          <Tooltip
-                            key={i}
-                            placement="top"
-                            trigger="hover"
-                            mouseEnterDelay={0}
-                            button={
-                              <div>
-                                <Seat
-                                  key={i}
-                                  seat={seat}
-                                  handleClick={handleClick}
-                                  type={type}
-                                  session={!!session}
-                                />
-                              </div>
-                            }
-                            panel={
-                              <UserTooltip user_id={lectureSeat!.user_id} />
-                            }
-                          />
-                        ) : (
-                          <Seat
-                            key={i}
-                            seat={seat}
-                            handleClick={handleClick}
-                            type={type}
-                            session={!!session}
-                          />
-                        )}
-                      </>
-                    );
+                      return (
+                        <ConditionalTooltip
+                          key={i}
+                          condition={state === "taken"}
+                          placement="top"
+                          trigger="hover"
+                          mouseEnterDelay={0}
+                          button={
+                            <div>
+                              <Seat
+                                key={i}
+                                seat={seat.index as number}
+                                handleClick={handleClick}
+                                state={state}
+                                session={!!session}
+                              />
+                            </div>
+                          }
+                          panel={<UserTooltip user_id={lectureSeat?.user_id} />}
+                        />
+                      );
+                    }
+                    case SeatType.Space:
+                      return (
+                        <div key={i} className="min-w-[32px] min-h-[32px]" />
+                      );
+                    case SeatType.Whiteboard:
+                      return (
+                        <div
+                          key={i}
+                          className={classNames(
+                            "w-1/3 h-px bg-blue-800",
+                            isReversed ? "mb-4" : "mt-4"
+                          )}
+                        />
+                      );
                   }
-                  case "-":
-                    return (
-                      <div key={i} className="min-w-[32px] min-h-[32px]" />
-                    );
-                }
-              })}
-            </div>
-          );
-        })}
+                })}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

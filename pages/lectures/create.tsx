@@ -33,36 +33,36 @@ export function Create() {
 
   return (
     <div className="flex items-center justify-center text-sm text-slate-200">
-      <div className="p-4 flex flex-col bg-slate-800 rounded-xl min-w-[240px] space-y-4">
-        <div className="text-lg font-medium">Create lecture</div>
-        <div className="h-0.5 bg-slate-600 -mx-4" />
+      <div className="p-4 flex flex-col rounded-xl min-w-[240px] space-y-4">
+        <div className="text-lg">Create Lecture</div>
+        <div className="h-[1.2px] bg-slate-800 -mx-1" />
         <div className="grid items-center grid-cols-2">
-          <div>Name</div>
+          <div className="text-md">Name</div>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="p-2 outline-none rounded-xl bg-slate-900 placeholder:font-light placeholder:text-slate-500"
+            className="p-3 font-medium outline-none rounded-xl bg-slate-900 placeholder:font-normal"
             placeholder="Optional"
           />
         </div>
         <div className="grid items-center grid-cols-2">
-          <div>Subject</div>
+          <div className="text-md">Subject</div>
           <input
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            className="p-2 outline-none rounded-xl bg-slate-900 placeholder:font-light placeholder:text-slate-500"
+            className="p-3 font-medium outline-none rounded-xl bg-slate-900 placeholder:font-normal"
             placeholder="IEL"
           />
         </div>
         <div className="grid items-center grid-cols-2">
-          <div>Room</div>
+          <div className="text-md">Room</div>
           <Dropdown
             selectedEntry={room}
             setEntry={setRoom}
             entries={Object.keys(ROOMS)}
           />
         </div>
-        <div className="h-0.5 bg-slate-600 -mx-4" />
+        <div className="h-[1.2px] bg-slate-800 -mx-1" />
         <div className="flex justify-end">
           <div
             onClick={onCreate}

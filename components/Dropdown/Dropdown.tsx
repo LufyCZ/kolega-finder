@@ -20,10 +20,10 @@ export function Dropdown({ entries, selectedEntry, setEntry }: Dropdown) {
         onChange={(option) => setEntry(option.value)}
         value={selectedEntry}
         className={classNames(
-          "text-slate-200 bg-slate-900 [&:not(.is-open)]:rounded-xl rounded-t-xl"
+          "text-slate-200 bg-slate-900 [&:not(.is-open)]:rounded-xl rounded-t-xl font-medium"
         )}
-        controlClassName="p-2"
-        menuClassName="bg-slate-900 rounded-b-xl [&>*:hover]:font-medium"
+        controlClassName="p-3"
+        menuClassName="bg-slate-900 rounded-b-xl font-normal [&>*:hover]:font-medium"
         arrowClosed={<div></div>}
         arrowOpen={<span className="arrow-open" />}
         onFocus={(bool) => setOpen(!bool)}

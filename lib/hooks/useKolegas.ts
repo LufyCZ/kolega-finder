@@ -14,10 +14,5 @@ export function useKolegas(lectureId: number) {
         .eq("lecture", lectureId)
   );
 
-  const { data: t } = useSWR(
-    lectureId && supabase ? `kolegas-${lectureId}` : null
-  );
-  console.log(t);
-
-  return 1;
+  return data?.count;
 }

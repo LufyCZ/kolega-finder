@@ -1,6 +1,12 @@
 // "-" space
 // "o" seat
-// "k" teacher's desk (to be implemented)
+// "w" whiteboard
+
+export enum SeatType {
+  Seat = "o",
+  Space = "-",
+  Whiteboard = "w",
+}
 
 const D105 = [
   "-oooooo--oooooooooooooooo--oooooo-",
@@ -15,6 +21,7 @@ const D105 = [
   "oooooooooooooooo",
   "",
   "oooooooooooooooo",
+  "w",
 ];
 
 const D0206 = [
@@ -27,6 +34,7 @@ const D0206 = [
   "oooo-oooooooooo-oooo",
   "oooo-oooooooooo-oooo",
   "oooooooooo",
+  "w",
 ];
 
 const D0207 = [
@@ -39,6 +47,7 @@ const D0207 = [
   "oooooooooo",
   "oooooooooo",
   "oooooooooo",
+  "w",
 ];
 
 const G202 = [
@@ -50,6 +59,7 @@ const G202 = [
   "oooooo-oooo",
   "oooooo-oooo",
   "oooooo-oooo",
+  "w",
 ];
 
 const E105 = [
@@ -59,7 +69,8 @@ const E105 = [
   "oooooooooo",
   "oooooooooo",
   "oooooooooo",
-  "oooooooooo"
+  "oooooooooo",
+  "w",
 ];
 
 const E104 = [
@@ -69,7 +80,8 @@ const E104 = [
   "oooooooooo",
   "oooooooooo",
   "oooooooooo",
-  "oooooooooo"
+  "oooooooooo",
+  "w",
 ];
 
 const E112 = [
@@ -79,6 +91,7 @@ const E112 = [
   "oooooo-oooooooooooooo-oooooo",
   "oooooo-oooooooooooooo-oooooo",
   "oooooo-oooooooooooooo-oooooo",
+  "w",
 ];
 
 const A112 = [
@@ -90,6 +103,7 @@ const A112 = [
   "oooooooo",
   "oooooooo",
   "oooooooo",
+  "w",
 ];
 
 const A113 = [
@@ -101,6 +115,7 @@ const A113 = [
   "oooooooo",
   "oooooooo",
   "oooooooo",
+  "w",
 ];
 
 export const ROOMS = {

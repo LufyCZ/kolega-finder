@@ -1,42 +1,13 @@
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useCallback } from "react";
+import useSWR from "swr";
 import { Database } from "../database.types";
-import { RowEntry } from "../types";
-
-type Payload =
-  | RealtimePostgresChangesPayload<RowEntry<"lectureSeats">>
-  | { eventType: "INIT"; new: RowEntry<"lectureSeats">[] };
-
-function update(state: RowEntry<"lectureSeats">[], payload: Payload) {
-  switch (payload.eventType) {
-    case "INIT": {
-      return payload.new;
-    }
-    case "INSERT": {
-      return [...(state || []), payload.new];
-    }
-    case "UPDATE": {
-      const stateWithoutNew = (state || []).filter(
-        (entry) => entry.id !== payload.old.id
-      );
-
-      return [...stateWithoutNew, payload.new];
-    }
-    case "DELETE": {
-      const stateWithoutOld = (state || []).filter(
-        (entry) => entry.id !== payload.old.id
-      );
-      return stateWithoutOld;
-    }
-  }
-}
 
 export function useLectureSeats(lectureId?: number) {
-  const [state, dispatch] = useReducer(update, []);
+  const session = useSession();
   const supabase = useSupabaseClient<Database>();
 
-  const fetch = useCallback(async () => {
+  const fetcher = useCallback(async () => {
     if (!lectureId) return;
 
     const { data, error } = await supabase
@@ -48,32 +19,79 @@ export function useLectureSeats(lectureId?: number) {
       throw new Error(error.message);
     }
 
-    if (data) dispatch({ eventType: "INIT", new: data });
-  }, [supabase, lectureId]);
+    return data;
+  }, [lectureId, supabase]);
 
-  useEffect(() => {
-    fetch();
-  }, [fetch, lectureId]);
+  const { data, mutate } = useSWR(
+    lectureId ? ["lecture-seats", lectureId] : null,
+    fetcher,
+    { refreshInterval: 10000, refreshWhenHidden: false }
+  );
 
-  useEffect(() => {
-    const subscription = supabase
-      .channel("public:lectureSeats")
-      .on<RowEntry<"lectureSeats">>(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "lectureSeats",
-          filter: `lecture=eq.${lectureId}`,
-        },
-        (payload) => dispatch(payload)
-      )
-      .subscribe();
+  const reserveSeat = useCallback(
+    (seatNumber: number) => {
+      if (!lectureId || !session) return;
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [fetch, lectureId, state, supabase]);
+      const newEntry = {
+        lecture: lectureId,
+        seat: seatNumber,
+        user_id: session.user.id,
+      };
 
-  return state;
+      const mutation = async () => {
+        await supabase.from("lectureSeats").insert(newEntry);
+        return fetcher();
+      };
+
+      mutate(mutation, {
+        optimisticData: [...(data ?? []), { ...newEntry, id: -1 }],
+        rollbackOnError: true,
+      });
+    },
+    [data, fetcher, lectureId, mutate, session, supabase]
+  );
+
+  const changeSeat = useCallback(
+    (rowId: number, newSeatNumber: number) => {
+      if (!lectureId || !session) return;
+
+      const updatedEntry = {
+        id: rowId,
+        lecture: lectureId,
+        seat: newSeatNumber,
+        user_id: session.user.id,
+      };
+
+      const mutation = async () => {
+        await supabase.from("lectureSeats").update(updatedEntry);
+        return fetcher();
+      };
+
+      mutate(mutation, {
+        optimisticData: [
+          ...(data?.filter((e) => e.id !== rowId) ?? []),
+          updatedEntry,
+        ],
+      });
+    },
+    [data, fetcher, lectureId, mutate, session, supabase]
+  );
+
+  const deleteSeat = useCallback(
+    (rowId: number) => {
+      if (!lectureId || !session) return;
+
+      const mutation = async () => {
+        await supabase.from("lectureSeats").delete().eq("id", rowId);
+        return fetcher();
+      };
+
+      mutate(mutation, {
+        optimisticData: [...(data?.filter((e) => e.id !== rowId) ?? [])],
+      });
+    },
+    [data, fetcher, lectureId, mutate, session, supabase]
+  );
+
+  return { data, reserveSeat, changeSeat, deleteSeat };
 }

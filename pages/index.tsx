@@ -1,8 +1,6 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import { CreateButton } from "../components/Lectures/CreateButton";
 import { LectureTable } from "../components/Lectures/LectureTable";
-import { Tooltip } from "../components/Tooltip";
 
 const Home: NextPage = () => {
   return (

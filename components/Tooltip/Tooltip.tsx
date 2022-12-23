@@ -49,3 +49,8 @@ export const Tooltip: FC<ExtendTooltipProps> = ({
     </RcTooltip>
   );
 };
+
+export const ConditionalTooltip: FC<
+  ExtendTooltipProps & { condition: boolean }
+> = ({ condition, ...props }) =>
+  condition ? <Tooltip {...props} /> : <>{props.button}</>;
