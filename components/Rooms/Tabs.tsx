@@ -1,4 +1,4 @@
-Qimport React from "react";
+import React from "react";
 
 interface Tab {
   title: string;
