@@ -9,33 +9,44 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      lecture: {
+      admin: {
         Row: {
-          id: number
-          subject: string
-          created_at: string | null
-          updated_at: string | null
-          creator: string
-          room: string
-          name: string | null
+          user_id: string
         }
         Insert: {
-          id?: number
-          subject: string
-          created_at?: string | null
-          updated_at?: string | null
-          creator: string
-          room: string
-          name?: string | null
+          user_id: string
         }
         Update: {
-          id?: number
-          subject?: string
+          user_id?: string
+        }
+      }
+      lecture: {
+        Row: {
+          created_at: string | null
+          creator: string
+          id: number
+          name: string | null
+          room: string
+          subject: string
+          updated_at: string | null
+        }
+        Insert: {
           created_at?: string | null
-          updated_at?: string | null
-          creator?: string
-          room?: string
+          creator: string
+          id?: number
           name?: string | null
+          room: string
+          subject: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          creator?: string
+          id?: number
+          name?: string | null
+          room?: string
+          subject?: string
+          updated_at?: string | null
         }
       }
       lectureSeats: {
@@ -64,15 +75,24 @@ export interface Database {
     }
     Functions: {
       seat_taken: {
-        Args: { lecture: number; seat: number }
+        Args: {
+          lecture: number
+          seat: number
+        }
         Returns: boolean
       }
       user_per_lecture_count: {
-        Args: { lecture: number; user_id: string }
+        Args: {
+          lecture: number
+          user_id: string
+        }
         Returns: number
       }
     }
     Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
       [_ in never]: never
     }
   }
