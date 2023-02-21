@@ -27,7 +27,6 @@ export const Paginator: FC<PaginatorProps> = ({
   pageSize,
   dataSize,
 }) => {
-  console.log(pageSize);
   return (
     <div className="flex items-center justify-between px-2 select-none h-14 text-slate-200">
       <div className="text-sm">
