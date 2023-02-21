@@ -79,14 +79,18 @@ export function LectureTable() {
   });
 
   return (
-    <>
-      <GenericTable
-        table={table}
-        columns={columns}
-        loading={!lectures && isValidating}
-        pageSize={PAGE_SIZE}
-        getLink={(row) => `/lectures/${row.id}`}
-      />
+    <div>
+      <div className="overflow-x-auto">
+        <div className="min-w-fit">
+          <GenericTable
+            table={table}
+            columns={columns}
+            loading={!lectures && isValidating}
+            pageSize={PAGE_SIZE}
+            getLink={(row) => `/lectures/${row.id}`}
+          />
+        </div>
+      </div>
       <Table.Paginator
         hasPrev={pagination.pageIndex > 0}
         hasNext={pagination.pageIndex < table.getPageCount() - 1}
@@ -99,6 +103,6 @@ export function LectureTable() {
         pageSize={PAGE_SIZE}
         dataSize={lectureCount ?? undefined}
       />
-    </>
+    </div>
   );
 }

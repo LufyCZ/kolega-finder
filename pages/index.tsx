@@ -8,11 +8,7 @@ const Home: NextPage = () => {
       <div className="flex justify-end">
         <CreateButton />
       </div>
-      <div className="overflow-x-auto">
-        <div className="min-w-fit">
-          <LectureTable />
-        </div>
-      </div>
+      <LectureTable />
     </div>
   );
 };

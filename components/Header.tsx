@@ -8,7 +8,7 @@ export function Header() {
   const router = useRouter();
 
   return (
-    <div className="grid items-center grid-cols-3 p-4">
+    <div className="grid items-center grid-cols-3 md:p-4">
       <div>
         {router.asPath.startsWith("/lectures") && (
           <div className="flex">
