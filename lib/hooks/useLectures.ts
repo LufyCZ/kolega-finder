@@ -28,6 +28,7 @@ export function useLectures(pagination?: PaginationState) {
         supabase
           .from("lecture")
           .select("*")
+          .order("updated_at", { ascending: false })
           .range(
             pagination.pageSize * pagination.pageIndex,
             pagination.pageSize * (pagination.pageIndex + 1) - 1
@@ -37,6 +38,7 @@ export function useLectures(pagination?: PaginationState) {
         supabase
           .from("lecture")
           .select("*")
+          .order("updated_at", { ascending: false })
           .then(({ data }) => data);
 
   return useSWR(key, fetcher);
