@@ -12,6 +12,7 @@ export interface PaginatorProps {
   pages?: number;
   pageSize: number;
   nextDisabled?: boolean;
+  dataSize?: number;
 }
 
 export const Paginator: FC<PaginatorProps> = ({
@@ -24,14 +25,19 @@ export const Paginator: FC<PaginatorProps> = ({
   pages,
   nextDisabled,
   pageSize,
+  dataSize,
 }) => {
+  console.log(pageSize);
   return (
-    <div className="flex items-center justify-between px-2 h-14">
+    <div className="flex items-center justify-between px-2 select-none h-14 text-slate-200">
       <div className="text-sm">
-        Showing <b>{page * pageSize + 1}</b> to <b>{(page + 1) * pageSize}</b>{" "}
+        Showing <b>{page * pageSize + 1}</b> to {""}
+        <b>
+          {pages && page < pages - 1 ? (page + 1) * pageSize : dataSize}
+        </b>{" "}
         {pages ? (
           <>
-            of <b>{pages * pageSize}</b>
+            of <b>{dataSize}</b>
           </>
         ) : (
           ""
@@ -47,7 +53,10 @@ export const Paginator: FC<PaginatorProps> = ({
             onClick={onPrev}
           >
             <ChevronLeftIcon
-              className="text-slate-200"
+              className={classNames(
+                "text-slate-200",
+                hasPrev && "cursor-pointer"
+              )}
               width={20}
               height={20}
             />
@@ -71,7 +80,10 @@ export const Paginator: FC<PaginatorProps> = ({
             onClick={onNext}
           >
             <ChevronRightIcon
-              className="text-slate-200"
+              className={classNames(
+                "text-slate-200",
+                hasNext && "cursor-pointer"
+              )}
               width={20}
               height={20}
             />

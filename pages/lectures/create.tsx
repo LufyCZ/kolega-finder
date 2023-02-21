@@ -1,35 +1,52 @@
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import classNames from "classnames";
 import { useRouter } from "next/router";
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
+import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import { Dropdown } from "../../components/Dropdown/Dropdown";
 import { ROOMS } from "../../components/Rooms/config";
 import { Database } from "../../lib";
 
+interface Form {
+  name?: string;
+  subject: string;
+  room: keyof typeof ROOMS;
+}
+
 export function Create() {
-  const [name, setName] = useState<string>("");
-  const [subject, setSubject] = useState<string>("");
-  const [room, setRoom] = useState<string>("D105");
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Form>({
+    defaultValues: { room: "D105" },
+  });
 
   const session = useSession();
   const supabase = useSupabaseClient<Database>();
   const router = useRouter();
 
-  const onCreate = useCallback(async () => {
-    if (!session || !subject) return;
+  const onSubmitValid = useCallback<SubmitHandler<Form>>(
+    async (data) => {
+      if (!session) return;
 
-    const { data, status } = await supabase
-      .from("lecture")
-      .insert({
-        name: name.length === 0 ? "-" : name,
-        subject,
-        creator: session.user.id,
-        room,
-      })
-      .select();
+      const { name, subject, room } = data;
 
-    if (status === 201 && data?.[0]) router.push(`/lectures/${data[0].id}`);
-  }, [session, subject, supabase, name, room, router]);
+      const { data: res, status } = await supabase
+        .from("lecture")
+        .insert({
+          name: name?.length === 0 ? "-" : name,
+          subject,
+          creator: session.user.id,
+          room,
+        })
+        .select();
+
+      if (status === 201 && res?.[0]) router.push(`/lectures/${res[0].id}`);
+    },
+    [session, supabase, router]
+  );
 
   return (
     <div className="flex items-center justify-center text-sm text-slate-200">
@@ -38,34 +55,61 @@ export function Create() {
         <div className="h-[1.2px] bg-slate-800 -mx-1" />
         <div className="grid items-center grid-cols-2">
           <div className="text-md">Name</div>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="p-3 font-medium outline-none rounded-xl bg-slate-900 placeholder:font-normal"
-            placeholder="Optional"
-          />
+          <div className="space-y-2">
+            <input
+              {...(register("name"), { maxLength: 20 })}
+              className="p-3 font-medium outline-none rounded-xl bg-slate-900 placeholder:font-normal"
+              placeholder="Optional"
+            />
+            {errors.name && (
+              <div className="flex justify-end">
+                <div className="text-xs text-red">{errors.name?.message}</div>
+              </div>
+            )}
+          </div>
         </div>
         <div className="grid items-center grid-cols-2">
           <div className="text-md">Subject</div>
-          <input
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            className="p-3 font-medium outline-none rounded-xl bg-slate-900 placeholder:font-normal"
-            placeholder="IEL"
-          />
+          <div className="space-y-2">
+            <input
+              {...register("subject", {
+                maxLength: { value: 5, message: "Max length is 5." },
+                required: "Subject is required.",
+              })}
+              className={classNames(
+                "p-3 font-medium outline-none rounded-xl bg-slate-900 placeholder:font-normal",
+                errors.subject && "outline-red-600 outline-[1.5px]"
+              )}
+              placeholder="IEL"
+            />
+            {errors.subject && (
+              <div className="flex justify-end">
+                <div className="text-xs text-red">
+                  {errors.subject?.message}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         <div className="grid items-center grid-cols-2">
           <div className="text-md">Room</div>
-          <Dropdown
-            selectedEntry={room}
-            setEntry={setRoom}
-            entries={Object.keys(ROOMS)}
+          <Controller
+            name="room"
+            control={control}
+            render={({ field }) => (
+              <Dropdown
+                {...register("subject")}
+                selectedEntry={field.value}
+                setEntry={(entry) => field.onChange(entry)}
+                entries={Object.keys(ROOMS)}
+              />
+            )}
           />
         </div>
         <div className="h-[1.2px] bg-slate-800 -mx-1" />
         <div className="flex justify-end">
           <div
-            onClick={onCreate}
+            onClick={handleSubmit(onSubmitValid)}
             className={classNames(
               session
                 ? "cursor-pointer hover:bg-slate-600"

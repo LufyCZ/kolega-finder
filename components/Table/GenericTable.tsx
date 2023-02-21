@@ -9,11 +9,19 @@ import Link from "next/link";
 
 interface GenericTable<T> {
   table: TableType<T>;
+  loading?: boolean;
+  pageSize: number;
   columns: ColumnDef<T, any>[];
   getLink?: (row: T) => string;
 }
 
-export function GenericTable<T>({ table, columns, getLink }: GenericTable<T>) {
+export function GenericTable<T>({
+  table,
+  loading,
+  pageSize,
+  columns,
+  getLink,
+}: GenericTable<T>) {
   return (
     <Table.container>
       <Table.table>
@@ -51,39 +59,85 @@ export function GenericTable<T>({ table, columns, getLink }: GenericTable<T>) {
           ))}
         </Table.thead>
         <Table.tbody>
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <Table.tr key={row.id} className="cursor-pointer">
-                {row.getVisibleCells().map((cell) => {
-                  return (
-                    <Table.td
-                      key={cell.id}
-                      style={{
-                        maxWidth: columns[0].size,
-                        width: columns[0].size,
-                      }}
-                    >
-                      {getLink ? (
-                        <Link href={getLink(row.original)} passHref={true}>
-                          <a className="flex flex-grow">
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </a>
-                        </Link>
-                      ) : (
-                        flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )
-                      )}
-                    </Table.td>
-                  );
-                })}
+          {!loading &&
+            table.getRowModel().rows.map((row) => {
+              return (
+                <Table.tr key={row.id} className="cursor-pointer">
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <Table.td
+                        key={cell.id}
+                        style={{
+                          maxWidth: columns[0].size,
+                          width: columns[0].size,
+                        }}
+                      >
+                        {getLink ? (
+                          <Link href={getLink(row.original)} passHref={true}>
+                            <a className="flex flex-grow">
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </a>
+                          </Link>
+                        ) : (
+                          flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )
+                        )}
+                      </Table.td>
+                    );
+                  })}
+                </Table.tr>
+              );
+            })}
+          {!loading &&
+            table.getRowModel().rows.length !== 0 &&
+            Array.from(
+              Array(Math.max(pageSize - table.getRowModel().rows.length, 0))
+            ).map((el, index) => (
+              <Table.tr key={index}>
+                {table.getVisibleFlatColumns().map((column) => (
+                  <Table.td
+                    key={column.id}
+                    style={{
+                      ...(column.columnDef.maxSize && {
+                        maxWidth: column.columnDef.maxSize,
+                      }),
+                      ...(column.columnDef.size && {
+                        maxWidth: column.columnDef.size,
+                      }),
+                      ...(column.columnDef.minSize && {
+                        maxWidth: column.columnDef.minSize,
+                      }),
+                    }}
+                  />
+                ))}
               </Table.tr>
-            );
-          })}
+            ))}
+          {loading &&
+            Array.from(Array(pageSize)).map((el, index) => (
+              <Table.tr key={index}>
+                {table.getVisibleFlatColumns().map((column) => (
+                  <Table.td
+                    key={column.id}
+                    style={{
+                      ...(column.columnDef.maxSize && {
+                        maxWidth: column.columnDef.maxSize,
+                      }),
+                      ...(column.columnDef.size && {
+                        maxWidth: column.columnDef.size,
+                      }),
+                      ...(column.columnDef.minSize && {
+                        maxWidth: column.columnDef.minSize,
+                      }),
+                    }}
+                  />
+                ))}
+              </Table.tr>
+            ))}
         </Table.tbody>
       </Table.table>
     </Table.container>

@@ -3,9 +3,9 @@ import { createClient } from "@supabase/supabase-js";
 import { Database } from "../../lib/database.types";
 
 export type UserApi = {
-  user_id: string;
-  full_name: string;
-  avatar_url: string;
+  userId: string;
+  fullName: string;
+  avatarUrl: string;
 };
 
 export default async function handler(
@@ -17,7 +17,7 @@ export default async function handler(
     "public, s-maxage=3600, stale-while-revalidate=3600"
   );
 
-  const user_id = req.query.user_id as string;
+  const userId = req.query.userId as string;
 
   if (!process.env.SUPABASE_SERVICE_KEY) {
     res.status(500).send("Service key not defined");
@@ -28,7 +28,7 @@ export default async function handler(
     process.env.SUPABASE_SERVICE_KEY
   );
 
-  const { data, error } = await client.auth.admin.getUserById(user_id);
+  const { data, error } = await client.auth.admin.getUserById(userId);
   if (error) {
     res.status(500).send(error.message);
     return;
@@ -40,5 +40,5 @@ export default async function handler(
     return;
   }
 
-  res.status(200).json({ user_id, full_name, avatar_url });
+  res.status(200).json({ userId, fullName: full_name, avatarUrl: avatar_url });
 }

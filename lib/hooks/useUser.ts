@@ -1,21 +1,8 @@
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 import { UserApi } from "../../pages/api/user";
 
-export function useUser(user_id?: string) {
-  const [user, setUser] = useState<UserApi>();
-
-  useEffect(() => {
-    if (user_id) {
-      fetch(
-        "/api/user?" +
-          new URLSearchParams({
-            user_id,
-          })
-      )
-        .then((data) => data.json())
-        .then((data: UserApi) => setUser(data));
-    }
-  }, [user_id]);
-
-  return user;
+export function useUser(userId?: string) {
+  return useSWR<UserApi>(userId ? `/api/user?userId=${userId}` : null, (url) =>
+    fetch(url).then((data) => data.json())
+  );
 }
