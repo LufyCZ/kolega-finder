@@ -21,7 +21,6 @@ button:disabled { cursor: not-allowed; }
 .home-page { max-width: 768px; margin: 24px auto; }
 .home-actions { display: flex; justify-content: flex-end; margin-bottom: 16px; }
 .lecture-table-wrap { overflow-x: auto; border-radius: 16px; box-shadow: 0 4px 6px #0003; background: #ffffff05; }
-.table-loading { display: grid; place-items: center; min-height: 104px; color: var(--muted); }
 .lecture-table { width: 100%; min-width: 690px; border-collapse: collapse; text-align: left; }
 .lecture-table thead { background: #1e293b; }
 .lecture-table th { height: 52px; padding: 0 16px; color: var(--muted); font-weight: 500; white-space: nowrap; }
@@ -56,6 +55,7 @@ button:disabled { cursor: not-allowed; }
 .seat-note { color: var(--muted); text-align: center; }
 .room-scroll { overflow-x: auto; padding: 8px 0 32px; }
 .room-map { display: grid; justify-content: center; gap: 6px; width: max-content; min-width: 100%; }
+.room-scroll[aria-busy="true"] .room-map { opacity: .55; }
 .room-row { display: flex; justify-content: center; gap: 6px; min-height: 32px; }
 .seat, .seat-space { flex: none; width: 32px; height: 32px; }
 .seat { position: relative; display: grid; place-items: center; padding: 0; border: 2px solid transparent; border-radius: 8px; background: #475569; color: var(--text); font-size: 12px; }

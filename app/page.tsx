@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import { db } from "@/lib/db";
+
+export const instant = false;
 
 type Lecture = { id: string; subject: string; name: string | null; room: string; updated_at: Date; creator_name: string; kolegas: number };
 
@@ -37,9 +38,10 @@ async function LectureList({ searchParams }: { searchParams: Promise<{ page?: st
   </>;
 }
 
-export default function Home({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+export default async function Home({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const lectures = await LectureList({ searchParams });
   return <section className="home-page">
     <div className="home-actions"><Link className="button button-primary" href="/lectures/create">Create <span aria-hidden="true">＋</span></Link></div>
-      <Suspense fallback={<div className="lecture-table-wrap table-loading" role="status">Loading lectures…</div>}><LectureList searchParams={searchParams} /></Suspense>
+    {lectures}
   </section>;
 }
