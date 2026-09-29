@@ -14,7 +14,7 @@ export function SeatMap({ lectureId, room, seats, userId }: { lectureId: string;
 
   return <section className="room-section">
     <div className="room-toolbar"><div className="legend"><span><i className="legend-dot free" />Available</span><span><i className="legend-dot mine" />Your seat</span><span><i className="legend-dot taken" />Taken</span></div><button type="button" className="button button-secondary" onClick={() => setReversed(!reversed)}>Reverse room</button></div>
-    {!userId && <p className="seat-note">Sign in with Discord to choose a seat.</p>}
+    <p className="seat-note" aria-hidden={!!userId}>{!userId ? "Sign in with Discord to choose a seat." : "\u00a0"}</p>
     <span className="sr-only" role="status">{pending ? "Saving seat…" : ""}</span>
     {error && <p className="error" role="alert">{error}</p>}
     <form action={action} className="room-scroll" aria-busy={pending}><input type="hidden" name="lectureId" value={lectureId} /><div className="room-map">

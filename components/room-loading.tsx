@@ -8,6 +8,7 @@ export function RoomLoading({ room }: { room: string | string[] | undefined }) {
       <div key={label}><dt>{label}</dt><dd><span className="skeleton-line skeleton-detail" /></dd></div>)}</dl>
     <section className="room-section" aria-hidden="true">
       <div className="room-toolbar"><div className="legend"><span><i className="legend-dot free" />Available</span><span><i className="legend-dot mine" />Your seat</span><span><i className="legend-dot taken" />Taken</span></div><span className="button button-secondary">Reverse room</span></div>
+      <p className="seat-note">{"\u00a0"}</p>
       <div className="room-scroll"><div className="room-map">
         {roomRows(room, true).map((row, rowIndex) => <div className="room-row" key={rowIndex}>{row.map(({ type }, index) =>
           type === SeatType.Whiteboard ? <span key={index} className="whiteboard" /> :
