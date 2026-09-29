@@ -23,11 +23,11 @@ async function LectureDetails({ params }: { params: Promise<{ id: string }> }) {
   if (!lecture || !isRoomName(lecture.room)) notFound();
 
   return <>
-    <div className="lecture-heading"><span className="subject-badge">{lecture.subject}</span><h1>{lecture.name || lecture.subject}</h1><p>Room {lecture.room} · Created by {lecture.creator_name} · {seatsResult.rows.length} {seatsResult.rows.length === 1 ? "kolega" : "kolegas"}</p></div>
+    <div className="lecture-heading"><div><h1>Subject</h1><p>{lecture.subject}</p></div><div><h1>Name</h1><p>{lecture.name || "-"}</p></div><div><h1>Kolegas</h1><p>{seatsResult.rows.length}</p></div></div>
     <SeatMap lectureId={lecture.id} room={lecture.room} seats={seatsResult.rows} userId={session?.user.id} />
   </>;
 }
 
 export default function LecturePage({ params }: { params: Promise<{ id: string }> }) {
-  return <section className="lecture-page"><Link href="/" className="back-link">← All lectures</Link><Suspense fallback={<div className="empty">Loading room…</div>}><LectureDetails params={params} /></Suspense></section>;
+  return <section className="lecture-page"><Link href="/" className="back-link">← Go Back</Link><Suspense fallback={<div className="empty">Loading room…</div>}><LectureDetails params={params} /></Suspense></section>;
 }
