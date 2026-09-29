@@ -10,14 +10,14 @@ button:disabled { cursor: not-allowed; }
 .site-header { display: flex; justify-content: flex-end; align-items: center; min-height: 72px; padding: 16px; }
 .site-main { padding: 0 16px 48px; }
 .account, .account-placeholder { display: flex; align-items: center; justify-content: space-between; min-width: 168px; min-height: 48px; padding: 0 12px; border-radius: 12px; background: var(--button); font-weight: 500; }
-.account { gap: 8px; }
+.account { gap: 8px; max-width: 100%; }
 .account:hover { background: #475569; }
-.account-name { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.avatar { border-radius: 8px; object-fit: cover; }
+.account-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.avatar { flex: none; border-radius: 8px; object-fit: cover; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 8px 16px; border: 0; border-radius: 12px; background: var(--button); color: var(--text); font-weight: 500; white-space: nowrap; }
 .button:hover:not(:disabled) { background: #475569; }
 .button:disabled { opacity: .5; }
-.account .button { width: 100%; justify-content: space-between; padding: 0; background: transparent; }
+.account .button { flex: none; padding: 0; background: transparent; }
 .home-page { max-width: 768px; margin: 24px auto; }
 .home-actions { display: flex; justify-content: flex-end; margin-bottom: 16px; }
 .lecture-table-wrap { overflow-x: auto; border-radius: 16px; box-shadow: 0 4px 6px #0003; background: #ffffff05; }
