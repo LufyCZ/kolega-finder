@@ -21,5 +21,5 @@ export async function createLecture(_previous: string, data: FormData): Promise<
     [subject, name || null, room, session.user.id],
   );
   revalidatePath("/");
-  redirect(`/lectures/${rows[0].id}`);
+  redirect(`/lectures/${rows[0].id}?room=${room}`);
 }

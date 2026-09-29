@@ -22,7 +22,7 @@ export function SeatMap({ lectureId, room, seats, userId }: { lectureId: string;
         if (type === SeatType.Whiteboard) return <span key={index} className="whiteboard" aria-label="Whiteboard" />;
         if (type === SeatType.Space) return <span key={index} className="seat-space" />;
         const occupant = occupied.get(number!);
-        const mine = occupant?.user_id === userId;
+        const mine = !!userId && occupant?.user_id === userId;
         const label = mine ? `Seat ${number}, yours; click to leave` : occupant ? `Seat ${number}, taken by ${occupant.name}` : `Seat ${number}, available`;
         return <button type="submit" name="seat" value={number!} key={index} className={`seat ${mine ? "seat-mine" : occupant ? "seat-taken" : "seat-free"}`} disabled={pending || !userId || (!!occupant && !mine)} title={label} aria-label={label}>
           {number}{occupant && <span className="seat-tooltip">{occupant.image && <Image src={occupant.image} alt="" width={28} height={28} className="avatar" />}{occupant.name}</span>}

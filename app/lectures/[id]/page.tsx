@@ -6,6 +6,9 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { isRoomName } from "@/lib/rooms";
 import { SeatMap, Occupant } from "@/components/seat-map";
+import { RoomLoading } from "@/components/room-loading";
+
+export const instant = false;
 
 type Lecture = { id: string; subject: string; name: string | null; room: string; creator_name: string };
 
@@ -29,6 +32,7 @@ async function LectureDetails({ params }: { params: Promise<{ id: string }> }) {
   </>;
 }
 
-export default function LecturePage({ params }: { params: Promise<{ id: string }> }) {
-  return <section className="lecture-page"><Link href="/" className="back-link">← Go Back</Link><Suspense fallback={<div className="room-loading" role="status">Loading room…</div>}><LectureDetails params={params} /></Suspense></section>;
+export default async function LecturePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ room?: string | string[] }> }) {
+  const { room } = await searchParams;
+  return <section className="lecture-page"><Link href="/" className="back-link">← Go Back</Link><Suspense fallback={<RoomLoading room={room} />}><LectureDetails params={params} /></Suspense></section>;
 }

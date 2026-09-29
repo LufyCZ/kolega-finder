@@ -28,6 +28,8 @@ button:disabled { cursor: not-allowed; }
 .lecture-table tbody tr:nth-child(even) { background: #ffffff0a; }
 .lecture-table tbody tr:hover { background: #ffffff12; }
 .lecture-table td a { display: flex; align-items: center; min-height: 52px; }
+.skeleton-line { display: block; width: 70%; height: 10px; border-radius: 4px; background: #475569; opacity: .65; }
+.skeleton-pagination { width: 64px; }
 .empty { padding: 24px !important; color: var(--muted); text-align: center; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .pagination { display: flex; justify-content: space-between; gap: 16px; min-height: 56px; padding: 16px 8px; color: var(--text); }
@@ -45,6 +47,7 @@ button:disabled { cursor: not-allowed; }
 .lecture-heading { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px 80px; margin: 0; text-align: center; }
 .lecture-heading dt { margin: 0 0 8px; color: #cbd5e1; font-size: clamp(24px, 3vw, 36px); font-weight: 500; letter-spacing: -.03em; }
 .lecture-heading dd { margin: 0; color: #cbd5e1; font-size: 20px; }
+.skeleton-detail { width: 96px; height: 18px; margin: 6px auto 0; }
 .room-loading { display: grid; place-items: center; min-height: 200px; color: var(--muted); }
 .room-section { margin-top: 40px; }
 .room-toolbar { display: flex; flex-direction: column-reverse; align-items: center; gap: 16px; margin-bottom: 16px; }
@@ -60,6 +63,7 @@ button:disabled { cursor: not-allowed; }
 .seat, .seat-space { flex: none; width: 32px; height: 32px; }
 .seat { position: relative; display: grid; place-items: center; padding: 0; border: 2px solid transparent; border-radius: 8px; background: #475569; color: var(--text); font-size: 12px; }
 .seat-free:not(:disabled):hover { background: #64748b; }
+.seat-skeleton { opacity: .5; }
 .seat-mine { border-color: #16a34a; }.seat-taken { border-color: #ef4444; }
 .seat:disabled { opacity: 1; }
 .whiteboard { align-self: center; width: 33%; height: 1px; background: #1e40af; }
