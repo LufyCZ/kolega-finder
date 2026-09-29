@@ -9,7 +9,7 @@ import { isRoomName } from "@/lib/rooms";
 
 export async function createLecture(_previous: string, data: FormData): Promise<string> {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) return "Sign in with Discord first.";
+  if (!session) return "Sign in with Discord before creating a lecture.";
 
   const name = String(data.get("name") ?? "").trim();
   const subject = String(data.get("subject") ?? "").trim().toUpperCase();
