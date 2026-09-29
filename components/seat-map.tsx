@@ -15,6 +15,7 @@ export function SeatMap({ lectureId, room, seats, userId }: { lectureId: string;
   return <section className="room-section">
     <div className="room-toolbar"><div className="legend"><span><i className="legend-dot free" />Available</span><span><i className="legend-dot mine" />Your seat</span><span><i className="legend-dot taken" />Taken</span></div><button type="button" className="button button-secondary" onClick={() => setReversed(!reversed)}>Reverse room</button></div>
     {!userId && <p className="seat-note">Sign in with Discord to choose a seat.</p>}
+    {pending && <p className="seat-note" role="status">Saving seat…</p>}
     {error && <p className="error" role="alert">{error}</p>}
     <form action={action} className="room-scroll"><input type="hidden" name="lectureId" value={lectureId} /><div className="room-map">
       {roomRows(room, reversed).map((row, rowIndex) => <div className="room-row" key={rowIndex}>{row.map(({ type, number }, index) => {

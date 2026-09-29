@@ -23,11 +23,12 @@ async function LectureDetails({ params }: { params: Promise<{ id: string }> }) {
   if (!lecture || !isRoomName(lecture.room)) notFound();
 
   return <>
-    <div className="lecture-heading"><div><h1>Subject</h1><p>{lecture.subject}</p></div><div><h1>Name</h1><p>{lecture.name || "-"}</p></div><div><h1>Kolegas</h1><p>{seatsResult.rows.length}</p></div></div>
+    <h1 className="sr-only">{lecture.name || lecture.subject}</h1>
+    <dl className="lecture-heading"><div><dt>Subject</dt><dd>{lecture.subject}</dd></div><div><dt>Name</dt><dd>{lecture.name || "-"}</dd></div><div><dt>Kolegas</dt><dd>{seatsResult.rows.length}</dd></div></dl>
     <SeatMap lectureId={lecture.id} room={lecture.room} seats={seatsResult.rows} userId={session?.user.id} />
   </>;
 }
 
 export default function LecturePage({ params }: { params: Promise<{ id: string }> }) {
-  return <section className="lecture-page"><Link href="/" className="back-link">← Go Back</Link><Suspense fallback={<div className="empty">Loading room…</div>}><LectureDetails params={params} /></Suspense></section>;
+  return <section className="lecture-page"><Link href="/" className="back-link">← Go Back</Link><Suspense fallback={<div className="room-loading" role="status">Loading room…</div>}><LectureDetails params={params} /></Suspense></section>;
 }
