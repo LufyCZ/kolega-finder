@@ -4,7 +4,7 @@ Find classmates in a lecture and choose seats together. Built with Next.js 16 (A
 
 ## Setup
 
-Requires Bun, Node.js 20.9+, a Neon Postgres database, and a Discord OAuth application.
+Requires Bun, Node.js 24, a Neon Postgres database, and a Discord OAuth application.
 
 1. Run `bun install` and copy `.env.example` to `.env`.
 2. Set `POSTGRES_DATABASE_URL`, `DISCORD_CLIENT_ID`, and `DISCORD_CLIENT_SECRET`. Generate `BETTER_AUTH_SECRET` with `openssl rand -base64 32`. Set `BETTER_AUTH_URL=http://localhost:3000` locally and `BETTER_AUTH_URL=https://kolega-finder.lufy.cz` in production.
